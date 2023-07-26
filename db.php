@@ -35,4 +35,28 @@ class DB {
 
     return $result->fetch_all(MYSQLI_ASSOC);
   }
+
+  public function insert($query, $params = []) {
+    $statement = $this->conn->prepare($query);
+
+    if (!empty($params)) {
+      $statement->bind_param(join('', array_column($params, 'type')), ...array_column($params, 'value'));
+    }
+
+    $statement->execute();
+
+    return $statement->insert_id;
+  }
+
+  public function update($query, $params = []) {
+    $statement = $this->conn->prepare($query);
+
+    if (!empty($params)) {
+      $statement->bind_param(join('', array_column($params, 'type')), ...array_column($params, 'value'));
+    }
+
+    $statement->execute();
+
+    return true;
+  }
 }

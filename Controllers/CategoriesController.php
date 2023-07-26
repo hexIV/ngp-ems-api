@@ -7,11 +7,40 @@ class Categories extends DB implements Crud {
   private $dbTable = 'categories';
 
   public function add($category = []) {
+    if (empty($category['title'])) {
+      throw new Exception('Title is required');
+    }
 
+    $categoryId = parent::insert("INSERT INTO $this->dbTable (title, parent_id) VALUES (?, ?)", [
+      ['type' => 's', 'value' => $category['title']],
+      ['type' => 'i', 'value' => $category['parent_id'] ?? null]
+    ]);
+
+    $category = parent::select("SELECT * FROM $this->dbTable WHERE id = ? AND rec_status = 1", [
+      ['type' => 'i', 'value' => $categoryId]
+    ]);
+
+    return $category;
   }
 
-  public function update($id, $category = []) {
+  public function edit($category = []) {
+    if (empty($category['id'])) {
+      throw new Exception('ID is required');
+    }
 
+    $result = parent::update("UPDATE $this->dbTable SET title = ?, parent_id = ? WHERE id = ?", [
+      ['type' => 's', 'value' => $category['title']],
+      ['type' => 'i', 'value' => $category['parent_id'] ?? null],
+      ['type' => 'i', 'value' => $category['id']]
+    ]);
+
+    if ($result) {
+      $category = parent::select("SELECT * FROM $this->dbTable WHERE id = ? AND rec_status = 1", [
+        ['type' => 'i', 'value' => $category['id']]
+      ]);
+  
+      return $category;
+    }
   }
 
   public function get($id = null) {

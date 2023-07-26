@@ -5,7 +5,7 @@ interface Crud {
 
   public function add($category = []);
 
-  public function update($id, $category = []);
+  public function edit($category = []);
 
   public function delete($id = null);
 }

@@ -4,6 +4,11 @@
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode('/', $uri);
 
+if (empty($uri[3])) {
+  echo json_encode(['status' => 200]);
+  exit;
+}
+
 if (count($uri) != 4) {
   echo json_encode(['status' => 404, 'data' => 'Incorrect URL']);
   exit;
@@ -45,6 +50,7 @@ switch (strtolower($_SERVER['REQUEST_METHOD'])) {
     break;
   case "delete":
     try {
+      $class->delete($_GET['id'] ?? null);
       echo json_encode(['status' => 200]);
     } catch (Exception $e) {
       echo json_encode(['status' => 500, 'data' => $e->getMessage()]);

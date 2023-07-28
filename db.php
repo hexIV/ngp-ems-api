@@ -25,9 +25,7 @@ class DB {
     $statement = $this->conn->prepare($query);
 
     if (!empty($params)) {
-      foreach ($params as $param) {
-        $statement->bind_param($param['type'], $param['value']);
-      }
+      $statement->bind_param(join('', array_column($params, 'type')), ...array_column($params, 'value'));
     }
 
     $statement->execute();

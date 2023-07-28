@@ -57,6 +57,12 @@ class Categories extends DB implements Crud {
   }
 
   public function delete($id = null) {
-    
+    if (empty($id)) {
+      throw new Exception('ID is required');
+    }
+
+    parent::update("UPDATE $this->dbTable SET rec_status = 0 WHERE id = ?", [
+      ['type' => 'i', 'value' => $id]
+    ]);
   }
 }

@@ -16,11 +16,7 @@ class Categories extends DB implements Crud {
       ['type' => 'i', 'value' => $category['parent_id'] ?? null]
     ]);
 
-    $category = parent::select("SELECT * FROM $this->dbTable WHERE id = ? AND rec_status = 1", [
-      ['type' => 'i', 'value' => $categoryId]
-    ]);
-
-    return $category;
+    return $this->get($categoryId);
   }
 
   public function edit($category = []) {
@@ -35,11 +31,7 @@ class Categories extends DB implements Crud {
     ]);
 
     if ($result) {
-      $category = parent::select("SELECT * FROM $this->dbTable WHERE id = ? AND rec_status = 1", [
-        ['type' => 'i', 'value' => $category['id']]
-      ]);
-  
-      return $category;
+      return $this->get($category['id']);
     }
   }
 

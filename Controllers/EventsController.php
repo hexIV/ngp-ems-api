@@ -53,7 +53,7 @@ class Events extends DB implements Crud {
       ['type' => 'i', 'value' => $event['id']],
     ]);
 
-    parent::delete("DELETE FROM events_categories WHERE event_id = ?", [['type' => 'i', 'value' => $event['id']]]);
+    parent::deleteRecords("DELETE FROM events_categories WHERE event_id = ?", [['type' => 'i', 'value' => $event['id']]]);
 
     foreach ($event['categories'] as $categoryId) {
       parent::insert("INSERT INTO events_categories (event_id, category_id) VALUES (?, ?)", [
@@ -75,6 +75,9 @@ class Events extends DB implements Crud {
       $event = parent::select("SELECT * FROM $this->dbTable WHERE id = ? AND rec_status = 1 ORDER BY id DESC", [
         ['type' => 'i', 'value' => $id]
       ]);
+      $event[0]['categories'] = array_column(parent::select("SELECT category_id FROM events_categories WHERE rec_status = 1 AND event_id = ?", [
+        ['type' => 'i', 'value' => $id]
+      ]), 'category_id');
 
       return $event[0];
     }

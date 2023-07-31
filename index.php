@@ -20,7 +20,7 @@ if (count($uri) != 4) {
 }
 
 // Create instance of Controller
-$className = strtoupper($uri[3]);
+$className = str_replace(" ", "", ucwords(str_replace("-", " ", $uri[3])));
 include "Controllers/" . $className . "Controller.php";
 $class = new $className();
 

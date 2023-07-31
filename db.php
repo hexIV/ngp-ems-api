@@ -57,4 +57,16 @@ class DB {
 
     return true;
   }
+
+  public function deleteRecords($query, $params = []) {
+    $statement = $this->conn->prepare($query);
+
+    if (!empty($params)) {
+      $statement->bind_param(join('', array_column($params, 'type')), ...array_column($params, 'value'));
+    }
+
+    $statement->execute();
+
+    return true;
+  }
 }
